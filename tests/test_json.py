@@ -3,7 +3,11 @@ from re import compile as re_compile
 
 from pytest import raises
 
-from jocassid_commons.json import json_get, locate_key
+from jocassid_commons.json import (
+    json_diff,
+    json_get,
+    locate_key,
+)
 
 
 def test_json_get():
@@ -164,6 +168,20 @@ def test_locate_key():
     assert expected == actual
 
 
+def test_json_diff():
+
+    json1 = {'a': 'alpha', 'b': 'bravo'}
+    json2 = {'b': 'beta', 'c': 'charlie'}
+
+    expected_lines = [
+        "'a'           'alpha'                   ",
+        "'b'           'bravo'       'beta'      ",
+        "'c'                         'charlie'   ",
+    ]
+    actual_lines = list(
+        json_diff(json1, json2, max_width=40)
+    )
+    assert expected_lines == actual_lines
 
 
 
